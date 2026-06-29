@@ -1,0 +1,6 @@
+{
+  "name": "Portal Pelaporan Kesjaor",
+  "description": "Sistem pelaporan bulanan real-time Kesehatan Kerja (Kesja) dan Kesehatan Olahraga (Kesor) untuk 31 Puskesmas ke Dinas Kesehatan Kabupaten.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
