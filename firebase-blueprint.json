@@ -1,0 +1,97 @@
+{
+  "entities": {
+    "MonthlyReport": {
+      "title": "MonthlyReport",
+      "description": "Laporan bulanan kesehatan kerja dari Puskesmas",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID unik laporan (format: puskesmasId_year_month)" },
+        "puskesmasId": { "type": "string", "description": "ID Puskesmas yang melapor" },
+        "puskesmasName": { "type": "string", "description": "Nama Puskesmas yang melapor" },
+        "year": { "type": "number", "description": "Tahun pelaporan" },
+        "month": { "type": "number", "description": "Bulan pelaporan (1-12)" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Waktu terakhir diperbarui" },
+        "updatedBy": { "type": "string", "description": "User atau operator yang memperbarui" },
+        "submitted": { "type": "boolean", "description": "Status pengiriman laporan ke Kabupaten" },
+        "values": {
+          "type": "object",
+          "description": "Nilai indikator pelaporan bulanan",
+          "properties": {
+            "posUkk_jumlah": { "type": "number" },
+            "posUkk_aktif": { "type": "number" },
+            "k3_pemeriksaanPegawai": { "type": "number" },
+            "k3_sarpras": { "type": "number" },
+            "k3_limbah": { "type": "number" },
+            "k3_imunisasi": { "type": "number" },
+            "k3_tim": { "type": "number" },
+            "gp2sp_perusahaan": { "type": "number" },
+            "gp2sp_periksaPekerja": { "type": "number" },
+            "gp2sp_kieGizi": { "type": "number" },
+            "formal_binaan": { "type": "number" },
+            "informal_binaan": { "type": "number" },
+            "informal_dilayani": { "type": "number" },
+            "pak_tuli": { "type": "number" },
+            "pak_pneumo": { "type": "number" },
+            "pak_dermatitis": { "type": "number" },
+            "pak_cts": { "type": "number" },
+            "pak_lainnya": { "type": "number" },
+            "ptk_myalgia": { "type": "number" },
+            "ptk_lbp": { "type": "number" },
+            "ptk_ispa": { "type": "number" },
+            "ptk_asthma": { "type": "number" },
+            "ptk_kelelahan": { "type": "number" },
+            "ptk_lainnya": { "type": "number" },
+            "kk_jarum": { "type": "number" },
+            "kk_kimia": { "type": "number" },
+            "kk_cedera": { "type": "number" },
+            "kk_lainnya": { "type": "number" }
+          }
+        }
+      },
+      "required": ["id", "puskesmasId", "puskesmasName", "year", "month", "updatedAt", "submitted", "values"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Log audit untuk semua tindakan pengguna",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "user": { "type": "string" },
+        "role": { "type": "string" },
+        "action": { "type": "string" },
+        "details": { "type": "string" }
+      },
+      "required": ["id", "timestamp", "user", "role", "action", "details"]
+    },
+    "UserAccount": {
+      "title": "UserAccount",
+      "description": "Akun pengguna kustom untuk login sistem",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "username": { "type": "string" },
+        "password": { "type": "string" },
+        "role": { "type": "string" },
+        "puskesmasId": { "type": "string" },
+        "puskesmasName": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "username", "password", "role", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/reports/{reportId}": {
+      "schema": "MonthlyReport",
+      "description": "Koleksi laporan bulanan dari 31 Puskesmas"
+    },
+    "/audit_logs/{logId}": {
+      "schema": "AuditLog",
+      "description": "Log aktivitas sistem dan pengguna"
+    },
+    "/users/{userId}": {
+      "schema": "UserAccount",
+      "description": "Koleksi akun pengguna kustom untuk autentikasi"
+    }
+  }
+}
