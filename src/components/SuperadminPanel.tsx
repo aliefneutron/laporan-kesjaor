@@ -20,6 +20,7 @@ import {
   UserPlus,
   Shield,
   Edit
+} from "lucide-react";
 import { motion } from "motion/react";
 import ConfirmationModal from "./ConfirmationModal";
 
