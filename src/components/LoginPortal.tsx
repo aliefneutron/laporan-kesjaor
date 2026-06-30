@@ -83,7 +83,22 @@ export default function LoginPortal({ onLoginSuccess }: LoginPortalProps) {
       };
     }
     
-    // 3. Operator check - extract matching puskesmas from username string
+    // 3. Operator check - check for pkmX pattern
+    const match = lower.match(/^pkm(\d+)$/);
+    if (match) {
+      const idx = parseInt(match[1], 10) - 1;
+      if (idx >= 0 && idx < LIST_PUSKESMAS.length) {
+        return {
+          role: "operator" as const,
+          username: userStr,
+          puskesmasId: LIST_PUSKESMAS[idx].id,
+          puskesmasName: LIST_PUSKESMAS[idx].name,
+          expectedPassword: "pkm123",
+        };
+      }
+    }
+    
+    // Fallback original logic
     let matchedPkm = LIST_PUSKESMAS.find((pkm) => {
       const cleanName = pkm.name.replace(/^Puskesmas\s+/i, "").toLowerCase();
       const formatted = cleanName.replace(/\s+/g, "_");
@@ -92,7 +107,6 @@ export default function LoginPortal({ onLoginSuccess }: LoginPortalProps) {
     });
     
     if (!matchedPkm) {
-      // Fallback word parsing
       matchedPkm = LIST_PUSKESMAS.find((pkm) => {
         const cleanName = pkm.name.replace(/^Puskesmas\s+/i, "").toLowerCase();
         const words = cleanName.split(/\s+/);
@@ -100,14 +114,14 @@ export default function LoginPortal({ onLoginSuccess }: LoginPortalProps) {
       });
     }
 
-    const finalPkm = matchedPkm || LIST_PUSKESMAS[0]; // Default fallback
+    const finalPkm = matchedPkm || LIST_PUSKESMAS[0];
 
     return {
       role: "operator" as const,
       username: userStr,
       puskesmasId: finalPkm.id,
       puskesmasName: finalPkm.name,
-      expectedPassword: "operator123",
+      expectedPassword: "pkm123", // Keep this simple for old fallback as well
     };
   };
 
