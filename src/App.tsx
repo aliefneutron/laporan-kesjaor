@@ -719,7 +719,7 @@ export default function App() {
               <h1 className="font-black text-xl text-blue-950 tracking-tight leading-none uppercase">
                 SIKEJORA
               </h1>
-              <p className="text-[11px] text-slate-500 font-medium tracking-wide mt-1 uppercase">
+              <p className="text-[9px] sm:text-[10px] text-slate-500 font-medium tracking-wide mt-1 uppercase whitespace-nowrap overflow-hidden text-ellipsis max-w-[280px] sm:max-w-none">
                 Sistem Informasi Pelaporan Kesehatan Kerja dan Olahraga
               </p>
             </div>
