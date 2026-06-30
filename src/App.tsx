@@ -24,7 +24,6 @@ import OfficialTableKerja from "./components/OfficialTableKerja";
 import OfficialTableOlahraga from "./components/OfficialTableOlahraga";
 import SubmissionGrid from "./components/SubmissionGrid";
 import DashboardStats from "./components/DashboardStats";
-import MockDataGenerator from "./components/MockDataGenerator";
 import LoginPortal, { UserSession } from "./components/LoginPortal";
 import SuperadminPanel from "./components/SuperadminPanel";
 import ConfirmationModal from "./components/ConfirmationModal";
@@ -207,187 +206,6 @@ export default function App() {
     } catch (err) {
       console.error("Failed to clear database: ", err);
       alert("Gagal mengosongkan database.");
-    }
-  };
-
-  const handleGenerateMock = async () => {
-    try {
-      let batch = writeBatch(db);
-      let writeCount = 0;
-
-      for (const pkm of LIST_PUSKESMAS) {
-        for (let month = 1; month <= 6; month++) {
-          const hasKerja = Math.random() > 0.15;
-          const hasOlah = Math.random() > 0.2;
-
-          if (hasKerja) {
-            const currentReportId = `${pkm.id}_${selectedYear}_${month}_kerja`;
-            const randomDiseases: Record<string, { pak: number; terduga: number; rujukan: number }> = {};
-            LIST_DISEASES.forEach((d) => {
-              randomDiseases[d.id] = {
-                pak: Math.random() > 0.88 ? Math.floor(Math.random() * 3) : 0,
-                terduga: Math.random() > 0.82 ? Math.floor(Math.random() * 4) : 0,
-                rujukan: Math.random() > 0.9 ? Math.floor(Math.random() * 2) : 0,
-              };
-            });
-
-            const val: KerjaValues = {
-              posUkk_jumlah: Math.floor(Math.random() * 8) + 2,
-              posUkk_aktif: Math.floor(Math.random() * 5) + 2,
-              k3_puskesmas: Math.random() > 0.3 ? 1 : 0,
-              k3_tim: Math.random() > 0.4 ? 1 : 0,
-              k3_pemeriksaanPegawai: Math.random() > 0.5 ? 1 : 0,
-              k3_sarpras: Math.random() > 0.2 ? 1 : 0,
-              k3_limbah: Math.random() > 0.3 ? 1 : 0,
-              k3_imunisasi: Math.random() > 0.6 ? 1 : 0,
-              gp2sp_perusahaan: Math.floor(Math.random() * 3),
-              gp2sp_periksaPekerja: Math.floor(Math.random() * 80) + 10,
-              gp2sp_kieGizi: Math.floor(Math.random() * 4),
-              formal_binaan: Math.floor(Math.random() * 5) + 1,
-              informal_binaan: Math.floor(Math.random() * 10) + 2,
-              informal_dilayani: Math.floor(Math.random() * 150) + 30,
-              diseases: randomDiseases,
-              kk_jarum: Math.random() > 0.8 ? 1 : 0,
-              kk_kimia: 0,
-              kk_cedera: Math.random() > 0.7 ? Math.floor(Math.random() * 3) : 0,
-              kk_lainnya: 0,
-            };
-
-            const isSub = Math.random() > 0.25;
-            const payload: MonthlyReport = {
-              id: currentReportId,
-              puskesmasId: pkm.id,
-              puskesmasName: pkm.name,
-              year: selectedYear,
-              month,
-              reportType: "kerja",
-              submitted: isSub,
-              submittedBy: "operator_pkm",
-              updatedAt: new Date(selectedYear, month - 1, 23, 14, 0, 0).toISOString(),
-              updatedBy: "operator_pkm",
-              values: val,
-            };
-
-            if (isSub) {
-              payload.submittedAt = new Date(selectedYear, month - 1, 24, 10, 0, 0).toISOString();
-            }
-
-            batch.set(doc(db, "reports", currentReportId), payload);
-            writeCount++;
-            if (writeCount >= 400) {
-              await batch.commit();
-              batch = writeBatch(db);
-              writeCount = 0;
-            }
-          }
-
-          if (hasOlah) {
-            const randomOlahId = `${pkm.id}_${selectedYear}_${month}_olahraga`;
-            const val: OlahragaValues = {
-              alkes_peregangan: Math.floor(Math.random() * 40) + 10,
-              alkes_senam: Math.floor(Math.random() * 6) + 2,
-              alkes_edukasi: Math.floor(Math.random() * 10) + 2,
-              alkes_skrining: Math.floor(Math.random() * 150) + 30,
-              alkes_penyelenggara: 1,
-              pustu_penyelenggara: Math.floor(Math.random() * 4) + 1,
-              pustu_jumlah: 5,
-              bina_mil_sasaran: Math.floor(Math.random() * 3) + 1,
-              bina_mil_dibina: Math.floor(Math.random() * 2) + 1,
-              bina_mil_ang_sasaran: Math.floor(Math.random() * 30) + 10,
-              bina_mil_ang_dibina: Math.floor(Math.random() * 20) + 5,
-              bina_lan_sasaran: Math.floor(Math.random() * 8) + 4,
-              bina_lan_dibina: Math.floor(Math.random() * 6) + 2,
-              bina_lan_ang_sasaran: Math.floor(Math.random() * 120) + 40,
-              bina_lan_ang_dibina: Math.floor(Math.random() * 90) + 30,
-              bina_lain_sasaran: Math.floor(Math.random() * 5) + 2,
-              bina_lain_dibina: Math.floor(Math.random() * 4) + 1,
-              bina_lain_ang_sasaran: Math.floor(Math.random() * 80) + 20,
-              bina_lain_ang_dibina: Math.floor(Math.random() * 60) + 15,
-              keb_cjh_terdaftar: Math.floor(Math.random() * 40) + 10,
-              keb_cjh_diukur: Math.floor(Math.random() * 35) + 5,
-              keb_cjh_baik_sekali: Math.floor(Math.random() * 10),
-              keb_cjh_baik: Math.floor(Math.random() * 15),
-              keb_cjh_cukup: Math.floor(Math.random() * 10),
-              keb_cjh_kurang: Math.floor(Math.random() * 5),
-              keb_cjh_kurang_sekali: Math.floor(Math.random() * 3),
-              keb_sek_sd_jumlah: 12,
-              keb_sek_sd_diukur: Math.floor(Math.random() * 6) + 3,
-              keb_sek_siswa_diukur: Math.floor(Math.random() * 80) + 30,
-              keb_sek_siswa_10_12: Math.floor(Math.random() * 150) + 50,
-              keb_sek_baik_sekali: Math.floor(Math.random() * 15),
-              keb_sek_baik: Math.floor(Math.random() * 20),
-              keb_sek_cukup: Math.floor(Math.random() * 15),
-              keb_sek_kurang: Math.floor(Math.random() * 10),
-              keb_sek_kurang_sekali: Math.floor(Math.random() * 5),
-              keb_pek_sasaran: Math.floor(Math.random() * 150) + 50,
-              keb_pek_diukur: Math.floor(Math.random() * 100) + 20,
-              keb_pek_tempat_kerja: Math.floor(Math.random() * 4) + 1,
-              keb_pek_baik_sekali: Math.floor(Math.random() * 10),
-              keb_pek_baik: Math.floor(Math.random() * 15),
-              keb_pek_cukup: Math.floor(Math.random() * 15),
-              keb_pek_kurang: Math.floor(Math.random() * 10),
-              keb_pek_kurang_sekali: Math.floor(Math.random() * 5),
-              keb_kel_jumlah: Math.floor(Math.random() * 10) + 2,
-              keb_kel_diukur: Math.floor(Math.random() * 8) + 1,
-              keb_kel_baik_sekali: Math.floor(Math.random() * 10),
-              keb_kel_baik: Math.floor(Math.random() * 15),
-              keb_kel_cukup: Math.floor(Math.random() * 15),
-              keb_kel_kurang: Math.floor(Math.random() * 10),
-              keb_kel_kurang_sekali: Math.floor(Math.random() * 5),
-              eval_cedera: Math.floor(Math.random() * 5),
-              eval_risiko: Math.floor(Math.random() * 3),
-              eval_bbtt: Math.floor(Math.random() * 40) + 10,
-            };
-
-            const isSub = Math.random() > 0.25;
-            const payload: MonthlyReport = {
-              id: randomOlahId,
-              puskesmasId: pkm.id,
-              puskesmasName: pkm.name,
-              year: selectedYear,
-              month,
-              reportType: "olahraga",
-              submitted: isSub,
-              submittedBy: "operator_pkm",
-              updatedAt: new Date(selectedYear, month - 1, 23, 15, 0, 0).toISOString(),
-              updatedBy: "operator_pkm",
-              values: val,
-            };
-
-            if (isSub) {
-              payload.submittedAt = new Date(selectedYear, month - 1, 24, 11, 0, 0).toISOString();
-            }
-
-            batch.set(doc(db, "reports", randomOlahId), payload);
-            writeCount++;
-            if (writeCount >= 400) {
-              await batch.commit();
-              batch = writeBatch(db);
-              writeCount = 0;
-            }
-          }
-        }
-      }
-
-      if (writeCount > 0) {
-        await batch.commit();
-      }
-
-      // Add fresh log for data generation
-      const newLogRef = doc(collection(db, "audit_logs"));
-      await setDoc(newLogRef, {
-        id: newLogRef.id,
-        timestamp: new Date().toISOString(),
-        user: session?.username || "Superadmin",
-        role: "superadmin",
-        action: "Generasi Data Demo Masal",
-        details: `Berhasil mempopulasi data demo Semester 1 Tahun ${selectedYear} untuk semua Puskesmas.`,
-      });
-
-      alert("Data demo berhasil diinjeksikan secara real-time!");
-    } catch (err) {
-      console.error("Failed to inject demo data: ", err);
-      alert("Gagal menginjeksikan data demo.");
     }
   };
 
@@ -875,8 +693,9 @@ export default function App() {
       </header>
 
       {/* Control Navigation Filters */}
-      <section className="bg-slate-100 border-b border-gray-200 py-4 px-6 print:hidden">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 items-end">
+      {!(session.role === "superadmin" && superadminView === "console") && (
+        <section className="bg-slate-100 border-b border-gray-200 py-4 px-6 print:hidden">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 items-end">
           {/* Report Type Selector */}
           <div>
             <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">
@@ -979,8 +798,9 @@ export default function App() {
               Unduh Excel
             </button>
           </div>
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
 
       {/* Main Content Workspace */}
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
@@ -1213,14 +1033,6 @@ export default function App() {
                     </>
                   )}
                 </div>
-
-                {/* Mock Data Injector (Simulasi) */}
-                <MockDataGenerator
-                  selectedYear={selectedYear}
-                  onRefresh={() => {
-                    // Refetched automatically via onSnapshot
-                  }}
-                />
               </div>
             )}
 
@@ -1232,7 +1044,6 @@ export default function App() {
                 selectedMonth={selectedMonth}
                 auditLogs={auditLogs}
                 onClearAllReports={handleClearAllReports}
-                onGenerateMock={handleGenerateMock}
                 customUsers={customUsers}
                 onAddUser={handleAddUser}
                 onDeleteUser={handleDeleteUser}

@@ -56,11 +56,7 @@ export default function LoginPortal({ onLoginSuccess }: LoginPortalProps) {
     return () => unsubscribe();
   }, []);
 
-  // Set default credentials on load
-  useEffect(() => {
-    setUsername("operator.pragaan@sumenep.go.id");
-    setPassword("operator123");
-  }, []);
+
 
   const detectUserRoleAndPkm = (userStr: string) => {
     const lower = userStr.toLowerCase().trim();
@@ -176,20 +172,6 @@ export default function LoginPortal({ onLoginSuccess }: LoginPortalProps) {
     }, 1200);
   };
 
-  const handleSetCredentials = (type: "operator" | "admin" | "superadmin") => {
-    setErrorMsg(null);
-    setSuccessMsg(null);
-    if (type === "operator") {
-      setUsername("operator.pragaan@sumenep.go.id");
-      setPassword("operator123");
-    } else if (type === "admin") {
-      setUsername("admin.dinkes@sumenep.go.id");
-      setPassword("admindinkes123");
-    } else {
-      setUsername("superadmin@sumenep.go.id");
-      setPassword("superadmin123");
-    }
-  };
 
   return (
     <div className="min-h-screen bg-slate-900 flex flex-col justify-center items-center p-4 relative overflow-hidden font-sans">
@@ -261,7 +243,7 @@ export default function LoginPortal({ onLoginSuccess }: LoginPortalProps) {
                   required
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="operator.nama_pkm@sumenep.go.id atau admin"
+                  placeholder="masukan username"
                   className="w-full bg-slate-900 border border-slate-700/60 rounded-xl py-2.5 pl-10 pr-3 text-xs font-semibold text-slate-100 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none focus:border-blue-500 transition-all"
                 />
               </div>
@@ -294,36 +276,7 @@ export default function LoginPortal({ onLoginSuccess }: LoginPortalProps) {
               </div>
             </div>
 
-            {/* Quick Demo Autofill Links - Styled as clean, minimal chips */}
-            <div className="bg-slate-900/40 rounded-xl p-3 border border-slate-700/20 space-y-2">
-              <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                <span>Kredensial Demo Cepat:</span>
-              </div>
-              <div className="flex flex-wrap gap-1.5">
-                <button
-                  type="button"
-                  onClick={() => handleSetCredentials("operator")}
-                  className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700/50 hover:border-slate-600 rounded-lg text-[10px] font-bold text-blue-300 transition-all cursor-pointer"
-                >
-                  Operator (Pragaan)
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleSetCredentials("admin")}
-                  className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700/50 hover:border-slate-600 rounded-lg text-[10px] font-bold text-indigo-300 transition-all cursor-pointer"
-                >
-                  Admin Dinkes
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleSetCredentials("superadmin")}
-                  className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700/50 hover:border-slate-600 rounded-lg text-[10px] font-bold text-purple-300 transition-all cursor-pointer"
-                >
-                  Superadmin
-                </button>
-              </div>
-            </div>
+
 
             {/* Login Button */}
             <button

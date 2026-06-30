@@ -33,7 +33,7 @@ export default function ReportFormOlahraga({
     if (isSubmitted) return;
     setValues((prev) => ({
       ...prev,
-      [key]: prev[key] === 1 ? 0 : 1,
+      [key]: (prev[key] || 0) === 1 ? 0 : 1,
     }));
   };
 
@@ -63,8 +63,8 @@ export default function ReportFormOlahraga({
       <div className="flex items-center gap-2">
         <button
           type="button"
-          disabled={isSubmitted || values[key] <= 0}
-          onClick={() => handleChange(key, values[key] - 1)}
+          disabled={isSubmitted || (values[key] || 0) <= 0}
+          onClick={() => handleChange(key, (values[key] || 0) - 1)}
           className="w-10 h-10 flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg active:scale-95 disabled:opacity-50 transition-all font-bold"
         >
           <Minus className="w-4 h-4" />
@@ -72,14 +72,14 @@ export default function ReportFormOlahraga({
         <input
           type="number"
           disabled={isSubmitted}
-          value={values[key]}
+          value={values[key] === undefined ? "" : values[key]}
           onChange={(e) => handleChange(key, parseInt(e.target.value) || 0)}
-          className="w-20 text-center font-bold text-gray-800 border border-gray-200 rounded-lg py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          className="w-20 text-center font-bold text-gray-800 border border-gray-200 rounded-lg py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none disabled:bg-gray-100 disabled:opacity-70 disabled:cursor-not-allowed"
         />
         <button
           type="button"
           disabled={isSubmitted}
-          onClick={() => handleChange(key, values[key] + 1)}
+          onClick={() => handleChange(key, (values[key] || 0) + 1)}
           className="w-10 h-10 flex items-center justify-center bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg active:scale-95 disabled:opacity-50 transition-all font-bold"
         >
           <Plus className="w-4 h-4" />
@@ -136,7 +136,7 @@ export default function ReportFormOlahraga({
                 type="button"
                 disabled={isSubmitted}
                 onClick={() => handleToggle("alkes_penyelenggara")}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none cursor-pointer ${
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none disabled:opacity-60 disabled:cursor-not-allowed ${
                   values.alkes_penyelenggara ? "bg-blue-600" : "bg-gray-200"
                 }`}
               >
