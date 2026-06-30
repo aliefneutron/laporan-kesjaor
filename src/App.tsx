@@ -53,7 +53,7 @@ import {
 export default function App() {
   // Authentication & Roles Session
   const [session, setSession] = useState<UserSession | null>(() => {
-    const saved = localStorage.getItem("sipet_session");
+    const saved = localStorage.getItem("sikesjaor_session");
     return saved ? JSON.parse(saved) : null;
   });
 
@@ -172,7 +172,7 @@ export default function App() {
   const userRole = session?.role || "operator";
 
   const [selectedPkmId, setSelectedPkmId] = useState<string>(() => {
-    const saved = localStorage.getItem("sipet_session");
+    const saved = localStorage.getItem("sikesjaor_session");
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -294,7 +294,7 @@ export default function App() {
 
   const handleLoginSuccess = (userSession: UserSession) => {
     setSession(userSession);
-    localStorage.setItem("sipet_session", JSON.stringify(userSession));
+    localStorage.setItem("sikesjaor_session", JSON.stringify(userSession));
     const pkmText = userSession.puskesmasName ? ` (${userSession.puskesmasName})` : "";
     writeAuditLogDirect(
       userSession,
@@ -308,7 +308,7 @@ export default function App() {
       await writeAuditLog("Logout Pengguna", "Keluar dari sistem");
     }
     setSession(null);
-    localStorage.removeItem("sipet_session");
+    localStorage.removeItem("sikesjaor_session");
   };
 
   // Real-time listener for reports collection
@@ -716,11 +716,11 @@ export default function App() {
               <FileText className="w-5.5 h-5.5" />
             </div>
             <div>
-              <h1 className="font-bold text-lg text-slate-900 tracking-tight leading-none uppercase">
-                SISTEM PELAPORAN TERPADU (SIPET)
+              <h1 className="font-black text-xl text-blue-950 tracking-tight leading-none uppercase">
+                SIKESJAOR
               </h1>
               <p className="text-[11px] text-slate-500 font-medium tracking-wide mt-1 uppercase">
-                Dinas Kesehatan Kabupaten Sumenep — PELAPORAN BULANAN TERPADU (LBKP & LBKO)
+                Sistem Informasi Pelaporan Kesehatan Kerja dan Olahraga
               </p>
             </div>
           </div>
@@ -1145,7 +1145,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-            <span>Portal KESJAOR Kabupaten Sumenep © 2026. Hak Cipta Dilindungi Undang-Undang.</span>
+            <span>Portal SIKESJAOR Kabupaten Sumenep © 2026. Hak Cipta Dilindungi Undang-Undang.</span>
           </div>
           <div className="flex gap-4 font-medium">
             <a href="#about" className="hover:text-slate-200">Tentang Sistem</a>

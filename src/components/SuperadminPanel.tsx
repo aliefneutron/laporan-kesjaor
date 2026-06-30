@@ -515,7 +515,7 @@ export default function SuperadminPanel({
             <div className="flex justify-between items-center">
               <div>
                 <h3 className="font-bold text-sm text-gray-800 uppercase tracking-wide">
-                  Manajemen Pengguna Aplikasi (SIPET)
+                  Manajemen Pengguna Aplikasi (SIKESJAOR)
                 </h3>
                 <p className="text-xs text-gray-500">
                   Daftar akun khusus yang tersimpan di Firestore database. Anda dapat menambahkan atau mencabut hak akses pengguna secara real-time.
@@ -754,7 +754,7 @@ export default function SuperadminPanel({
           <div className="space-y-6">
             <div>
               <h3 className="font-bold text-sm text-gray-800 uppercase tracking-wide">
-                Konfigurasi Teknis Sistem Pelaporan (SIPET)
+                Konfigurasi Teknis Sistem Pelaporan (SIKESJAOR)
               </h3>
               <p className="text-xs text-gray-500">
                 Pusat parameter operasional web untuk Superadmin dinkes.
