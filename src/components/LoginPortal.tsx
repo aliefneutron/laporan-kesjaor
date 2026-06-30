@@ -199,10 +199,10 @@ export default function LoginPortal({ onLoginSuccess }: LoginPortalProps) {
           <h1 className="text-xl md:text-2xl font-black text-white tracking-wider uppercase leading-none">
             SIKEJORA
           </h1>
-          <p className="text-[9px] md:text-[10px] text-blue-200/80 font-bold uppercase tracking-wider mt-1.5 whitespace-nowrap">
+          <p className="text-[11px] md:text-xs text-blue-200/80 font-bold uppercase tracking-tight mt-1.5 whitespace-nowrap">
             Sistem Informasi Pelaporan Kesehatan Kerja dan Olahraga
           </p>
-          <p className="text-[8px] md:text-[9px] text-gray-400 font-medium uppercase tracking-wider mt-1 whitespace-nowrap">
+          <p className="text-[10px] md:text-[11px] text-gray-400 font-medium uppercase tracking-wide mt-1 whitespace-nowrap">
             Dinas Kesehatan Kabupaten Sumenep
           </p>
         </div>
