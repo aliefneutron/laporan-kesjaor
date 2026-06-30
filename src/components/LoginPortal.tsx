@@ -83,45 +83,36 @@ export default function LoginPortal({ onLoginSuccess }: LoginPortalProps) {
       };
     }
     
-    // 3. Operator check - check for pkmX pattern
-    const match = lower.match(/^pkm(\d+)$/);
-    if (match) {
-      const idx = parseInt(match[1], 10) - 1;
-      if (idx >= 0 && idx < LIST_PUSKESMAS.length) {
-        return {
-          role: "operator" as const,
-          username: userStr,
-          puskesmasId: LIST_PUSKESMAS[idx].id,
-          puskesmasName: LIST_PUSKESMAS[idx].name,
-          expectedPassword: "pkm123",
-        };
-      }
-    }
-    
-    // Fallback original logic
-    let matchedPkm = LIST_PUSKESMAS.find((pkm) => {
-      const cleanName = pkm.name.replace(/^Puskesmas\s+/i, "").toLowerCase();
-      const formatted = cleanName.replace(/\s+/g, "_");
-      const formattedNoUnderscore = cleanName.replace(/\s+/g, "");
-      return lower.includes(formatted) || lower.includes(formattedNoUnderscore);
+    // 3. Operator check - check for pkm+name (e.g. pkmpragaan)
+    const matchedPkm = LIST_PUSKESMAS.find((pkm) => {
+      // Remove "Puskesmas ", spaces, and hyphens to create the clean suffix
+      const cleanName = pkm.name
+        .replace(/^Puskesmas\s+/i, "")
+        .replace(/[\s-]/g, "")
+        .toLowerCase();
+      
+      const expectedUsername = `pkm${cleanName}`;
+      return lower === expectedUsername;
     });
-    
-    if (!matchedPkm) {
-      matchedPkm = LIST_PUSKESMAS.find((pkm) => {
-        const cleanName = pkm.name.replace(/^Puskesmas\s+/i, "").toLowerCase();
-        const words = cleanName.split(/\s+/);
-        return words.some((w) => w.length > 2 && lower.includes(w));
-      });
+
+    if (matchedPkm) {
+      return {
+        role: "operator" as const,
+        username: userStr,
+        puskesmasId: matchedPkm.id,
+        puskesmasName: matchedPkm.name,
+        expectedPassword: "pkm123",
+      };
     }
 
-    const finalPkm = matchedPkm || LIST_PUSKESMAS[0];
-
+    // Fallback: Default fallback if user types random but we still need a default return signature.
+    // In actual implementation, if it doesn't match above, we can just return the first one but it will fail password anyway unless they use pkm123
     return {
       role: "operator" as const,
       username: userStr,
-      puskesmasId: finalPkm.id,
-      puskesmasName: finalPkm.name,
-      expectedPassword: "pkm123", // Keep this simple for old fallback as well
+      puskesmasId: LIST_PUSKESMAS[0].id,
+      puskesmasName: LIST_PUSKESMAS[0].name,
+      expectedPassword: "pkm123", 
     };
   };
 
