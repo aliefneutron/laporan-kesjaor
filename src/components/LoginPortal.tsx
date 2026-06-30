@@ -197,7 +197,7 @@ export default function LoginPortal({ onLoginSuccess }: LoginPortalProps) {
             <ShieldCheck className="w-8 h-8" />
           </div>
           <h1 className="text-xl md:text-2xl font-black text-white tracking-wider uppercase leading-none">
-            SIKESJAOR
+            SIKEJORA
           </h1>
           <p className="text-[11px] md:text-xs text-blue-200/80 font-bold uppercase tracking-widest mt-1.5">
             Sistem Informasi Pelaporan Kesehatan Kerja dan Olahraga
@@ -306,7 +306,7 @@ export default function LoginPortal({ onLoginSuccess }: LoginPortalProps) {
 
         {/* Footer Credit */}
         <p className="text-center text-slate-500 text-[10px] tracking-wider uppercase font-semibold mt-6">
-          Portal SIKESJAOR Kabupaten Sumenep © 2026. All rights reserved.
+          Portal SIKEJORA Kabupaten Sumenep © 2026. All rights reserved.
         </p>
       </motion.div>
     </div>
