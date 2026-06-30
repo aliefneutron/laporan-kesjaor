@@ -143,7 +143,6 @@ export default function ReportFormKerja({
             {renderNumberInput("Jumlah Pos UKK Aktif", "posUkk_aktif", "Pos UKK yang rutin melakukan pelayanan bulanan")}
 
             <h4 className="font-bold text-blue-900 text-sm mt-6 mb-2 border-l-4 border-blue-700 pl-2 uppercase tracking-wide">
-            <h4 className="font-bold text-blue-900 text-sm mt-6 mb-2 border-l-4 border-blue-700 pl-2 uppercase tracking-wide">
               A. K3 PERKANTORAN
             </h4>
             
