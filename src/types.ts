@@ -90,11 +90,12 @@ export interface KerjaValues {
   // NEW DISEASE STRUCTURE (PAK, TERDUGA PAK, RUJUKAN PAK)
   diseases: Record<string, { pak: number; terduga: number; rujukan: number }>;
   pak_dokter: number; // 1 = ya, 0 = tidak
-  // KECELAKAAN KERJA (KK)
-  kk_jarum: number;
-  kk_kimia: number;
-  kk_cedera: number;
-  kk_lainnya: number;
+  // KECELAKAAN AKIBAT KERJA (KAK)
+  kak_jumlah: number;
+  
+  // SKRINING KESEHATAN PEKERJA
+  skrining_tempat: number;
+  skrining_pekerja: number;
 }
 
 export interface OlahragaValues {
@@ -204,10 +205,12 @@ export const INITIAL_KERJA_VALUES: KerjaValues = {
   formal_kesja: 0,
   diseases: initialDiseases,
   pak_dokter: 0,
-  kk_jarum: 0,
-  kk_kimia: 0,
-  kk_cedera: 0,
-  kk_lainnya: 0
+  // KECELAKAAN AKIBAT KERJA (KAK)
+  kak_jumlah: 0,
+  
+  // SKRINING KESEHATAN PEKERJA
+  skrining_tempat: 0,
+  skrining_pekerja: 0,
 };
 
 export const INITIAL_OLAHRAGA_VALUES: OlahragaValues = {

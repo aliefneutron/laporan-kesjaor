@@ -209,35 +209,35 @@ export default function OfficialTableKerja({
             <td className="border border-gray-300 px-3 py-1.5 text-gray-500 italic">Ketersediaan dokter PAK</td>
           </tr>
 
-          {/* F. KECELAKAAN KERJA (KK) */}
+          {/* F. KECELAKAAN AKIBAT KERJA (KAK) */}
           <tr className="bg-gray-100 font-bold text-gray-800">
-            <td className="border border-gray-300 px-3 py-1.5 text-center">F</td>
-            <td className="border border-gray-300 px-3 py-1.5" colSpan={4}>KASUS KECELAKAAN KERJA (KK)</td>
+            <td className="border border-gray-300 px-3 py-1.5" colSpan={5}>KECELAKAAN AKIBAT KERJA (KAK)</td>
           </tr>
           <tr>
-            <td className="border border-gray-300 px-3. py-1 text-center" rowSpan={4}>1</td>
-            <td className="border border-gray-300 px-3 py-1 font-medium bg-slate-50/40">a. Tertusuk Jarum Suntik / Benda Tajam</td>
+            <td className="border border-gray-300 px-3. py-1 text-center">1</td>
+            <td className="border border-gray-300 px-3 py-1 font-medium bg-slate-50/40">Jumlah Kecelakaan Akibat Kerja (KAK)</td>
             <td className="border border-gray-300 px-3 py-1 text-center">Kasus</td>
-            <td className="border border-gray-300 px-3 py-1 text-center text-rose-600 font-semibold">{data.kk_jarum}</td>
-            <td className="border border-gray-300 px-3 py-1 text-gray-400 italic">Nakes / petugas kebersihan</td>
+            <td className="border border-gray-300 px-3 py-1 text-center text-rose-600 font-semibold">{data.kak_jumlah}</td>
+            <td className="border border-gray-300 px-3 py-1 text-gray-400 italic">Total Kasus</td>
+          </tr>
+
+          {/* G. SKRINING KESEHATAN PEKERJA */}
+          <tr className="bg-gray-100 font-bold text-gray-800">
+            <td className="border border-gray-300 px-3 py-1.5" colSpan={5}>SKRINING KESEHATAN PEKERJA</td>
           </tr>
           <tr>
-            <td className="border border-gray-300 px-3 py-1 font-medium bg-slate-50/40">b. Terpapar Bahan Kimia Berbahaya</td>
-            <td className="border border-gray-300 px-3 py-1 text-center">Kasus</td>
-            <td className="border border-gray-300 px-3 py-1 text-center text-rose-600 font-semibold">{data.kk_kimia}</td>
-            <td className="border border-gray-300 px-3 py-1 text-gray-400 italic">Cairan laboratorium, disinfektan</td>
+            <td className="border border-gray-300 px-3. py-1 text-center">1</td>
+            <td className="border border-gray-300 px-3 py-1 font-medium bg-slate-50/40">Jumlah tempat kerja FORMAL dan INFORMAL yang dilakukan skrining kesehatan & faktor risiko kesehatan kerja</td>
+            <td className="border border-gray-300 px-3 py-1 text-center">Tempat Kerja</td>
+            <td className="border border-gray-300 px-3 py-1 text-center text-emerald-600 font-semibold">{data.skrining_tempat}</td>
+            <td className="border border-gray-300 px-3 py-1 text-gray-400 italic">Tempat Kerja</td>
           </tr>
           <tr>
-            <td className="border border-gray-300 px-3 py-1 font-medium bg-slate-50/40">c. Cedera Fisik (Terjatuh, Luka robek, dll)</td>
-            <td className="border border-gray-300 px-3 py-1 text-center">Kasus</td>
-            <td className="border border-gray-300 px-3 py-1 text-center text-rose-600 font-semibold">{data.kk_cedera}</td>
-            <td className="border border-gray-300 px-3 py-1 text-gray-400 italic">Di tempat kerja/lapangan</td>
-          </tr>
-          <tr>
-            <td className="border border-gray-300 px-3 py-1 font-medium bg-slate-50/40">d. Kecelakaan Kerja Lainnya</td>
-            <td className="border border-gray-300 px-3 py-1 text-center">Kasus</td>
-            <td className="border border-gray-300 px-3 py-1 text-center text-rose-600 font-semibold">{data.kk_lainnya}</td>
-            <td className="border border-gray-300 px-3 py-1 text-gray-400 italic">Lain-lain</td>
+            <td className="border border-gray-300 px-3. py-1 text-center">2</td>
+            <td className="border border-gray-300 px-3 py-1 font-medium bg-slate-50/40">Jumlah pekerja FORMAL dan INFORMAL yang dilakukan skrining kesehatan & faktor risiko kesehatan kerja</td>
+            <td className="border border-gray-300 px-3 py-1 text-center">Orang</td>
+            <td className="border border-gray-300 px-3 py-1 text-center text-emerald-600 font-semibold">{data.skrining_pekerja}</td>
+            <td className="border border-gray-300 px-3 py-1 text-gray-400 italic">Oleh puskesmas / mandiri</td>
           </tr>
         </tbody>
       </table>

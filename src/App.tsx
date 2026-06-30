@@ -516,27 +516,37 @@ export default function App() {
         ["D", "KESEHATAN KERJA TEMPAT KERJA FORMAL (RPJMN)", "", "", ""],
         ["1", "Jumlah tempat kerja sektor formal (memiliki > 100 pekerja dan/atau risiko tinggi)", "Tempat Kerja", v.formal_jumlah || 0, "Sektor formal"],
         ["2", "Tempat kerja sektor formal (memiliki > 100 pekerja dan/atau risiko tinggi) yang melaksanakan kesehatan kerja", "Tempat Kerja", v.formal_kesja || 0, "Melaksanakan kesja"],
-        ["E", "PENYAKIT AKIBAT KERJA (PAK) & KECELAKAAN KERJA", "", "", ""],
-        ["E.1", "PENYAKIT AKIBAT KERJA (PAK)", "", "", ""],
+        ["", "PENYAKIT AKIBAT KERJA (PAK)", "", "", ""],
+        ["", "Apakah memiliki dokter PAK (Ya/Tidak)", "Ya/Tidak", isAggregate ? `${v.pak_dokter || 0} PKM` : (v.pak_dokter ? "Ya" : "Tidak"), "Ketersediaan dokter PAK"],
+        ["1", "Jumlah Penyakit Akibat Kerja", "", "", ""]
       ];
       
-      LIST_DISEASES.forEach((disease, idx) => {
+      // 1. PAK Definitif
+      LIST_DISEASES.forEach((disease) => {
         const dVal = v.diseases?.[disease.id] || { pak: 0, terduga: 0, rujukan: 0 };
-        rows.push([`E.1.${idx + 1}`, `${disease.name} (${disease.icd || "-"}) - PAK Definitif`, "Kasus", dVal.pak || 0, "Kasus terdiagnosis dokter"]);
-        rows.push(["", `${disease.name} (${disease.icd || "-"}) - Terduga PAK`, "Kasus", dVal.terduga || 0, "Kasus suspect/gejala awal"]);
-        rows.push(["", `${disease.name} (${disease.icd || "-"}) - Rujukan PAK`, "Kasus", dVal.rujukan || 0, "Kasus dirujuk ke faskes sekunder"]);
+        rows.push(["", `${disease.name} (${disease.icd || "-"})`, "Kasus", dVal.pak || 0, "Kasus terdiagnosis dokter"]);
+      });
+
+      // 2. Terduga PAK
+      rows.push(["2", "Jumlah Terduga Penyakit Akibat Kerja", "", "", ""]);
+      LIST_DISEASES.forEach((disease) => {
+        const dVal = v.diseases?.[disease.id] || { pak: 0, terduga: 0, rujukan: 0 };
+        rows.push(["", `${disease.name} (${disease.icd || "-"})`, "Kasus", dVal.terduga || 0, "Kasus suspect/gejala awal"]);
+      });
+
+      // 3. Rujukan PAK
+      rows.push(["3", "Jumlah Rujukan Penyakit Akibat Kerja", "", "", ""]);
+      LIST_DISEASES.forEach((disease) => {
+        const dVal = v.diseases?.[disease.id] || { pak: 0, terduga: 0, rujukan: 0 };
+        rows.push(["", `${disease.name} (${disease.icd || "-"})`, "Kasus", dVal.rujukan || 0, "Kasus dirujuk ke faskes sekunder"]);
       });
       
       rows.push(
-        ["", "Apakah memiliki dokter PAK (Ya/Tidak)", "Ya/Tidak", isAggregate ? `${v.pak_dokter || 0} PKM` : (v.pak_dokter ? "Ya" : "Tidak"), "Ketersediaan dokter PAK"]
-      );
-
-      rows.push(
-        ["E.2", "KECELAKAAN KERJA (KK)", "", "", ""],
-        ["1", "Tertusuk Jarum / Benda Tajam Medis", "Kasus", v.kk_jarum || 0, "Kejadian pada nakes / pegawai"],
-        ["2", "Paparan Bahan Kimia / Gas Berbahaya", "Kasus", v.kk_kimia || 0, "Iritasi mata, kulit, inhalasi"],
-        ["3", "Cedera / Luka Fisik di Tempat Kerja", "Kasus", v.kk_cedera || 0, "Terjatuh, terpukul, luka robek"],
-        ["4", "Kecelakaan Kerja Lainnya", "Kasus", v.kk_lainnya || 0, "Kejadian di luar kategori di atas"]
+        ["", "KECELAKAAN AKIBAT KERJA (KAK)", "", "", ""],
+        ["1", "Jumlah Kecelakaan Akibat Kerja (KAK)", "Kasus", v.kak_jumlah || 0, "Total kasus KAK"],
+        ["", "SKRINING KESEHATAN PEKERJA", "", "", ""],
+        ["1", "Jumlah tempat kerja FORMAL dan INFORMAL yang dilakukan skrining kesehatan & faktor risiko kesehatan kerja", "Tempat Kerja", v.skrining_tempat || 0, "Tempat Kerja"],
+        ["2", "Jumlah pekerja FORMAL dan INFORMAL yang dilakukan skrining kesehatan & faktor risiko kesehatan kerja oleh puskesmas dan tempat kerja secara mandiri", "Orang", v.skrining_pekerja || 0, "Oleh puskesmas / mandiri"]
       );
     } else {
       const v = values as OlahragaValues;

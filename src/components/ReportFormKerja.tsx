@@ -59,7 +59,7 @@ export default function ReportFormKerja({
     { id: "pos_k3", name: "Pos UKK & K3 Perkantoran" },
     { id: "gp2sp_binaan", name: "GP2SP & RPJMN (Kesehatan Kerja)" },
     { id: "pak_ptk", name: "Penyakit (PAK, Terduga, Rujukan)" },
-    { id: "kk", name: "Kecelakaan Kerja" },
+    { id: "kk", name: "KAK & Skrining" },
   ] as const;
 
   const renderNumberInput = (label: string, key: keyof KerjaValues, tooltip?: string) => (
@@ -269,14 +269,21 @@ export default function ReportFormKerja({
         )}
 
         {activeTab === "kk" && (
-          <div className="space-y-4">
-            <h4 className="font-bold text-rose-800 text-sm mb-2 border-l-4 border-rose-500 pl-2 uppercase tracking-wide">
-              G. Kasus Kecelakaan Kerja (KK)
-            </h4>
-            {renderNumberInput("a. Tertusuk Jarum Suntik / Benda Tajam", "kk_jarum", "Biasa dialami nakes atau CS medis")}
-            {renderNumberInput("b. Terpapar Bahan Kimia Berbahaya", "kk_kimia", "Terkena asam, uap zat, reagen laboratorium")}
-            {renderNumberInput("c. Cedera Fisik (Terjatuh, Luka robek, dll)", "kk_cedera")}
-            {renderNumberInput("d. Kecelakaan Kerja Lainnya", "kk_lainnya")}
+          <div className="space-y-6">
+            <div>
+              <h4 className="font-bold text-rose-800 text-sm mb-2 border-l-4 border-rose-500 pl-2 uppercase tracking-wide">
+                KECELAKAAN AKIBAT KERJA (KAK)
+              </h4>
+              {renderNumberInput("1. Jumlah Kecelakaan Akibat Kerja (KAK)", "kak_jumlah")}
+            </div>
+            
+            <div>
+              <h4 className="font-bold text-emerald-800 text-sm mb-2 border-l-4 border-emerald-500 pl-2 uppercase tracking-wide mt-6">
+                SKRINING KESEHATAN PEKERJA
+              </h4>
+              {renderNumberInput("1. Jumlah tempat kerja FORMAL dan INFORMAL yang dilakukan skrining kesehatan & faktor risiko", "skrining_tempat")}
+              {renderNumberInput("2. Jumlah pekerja FORMAL dan INFORMAL yang dilakukan skrining kesehatan (oleh PKM/mandiri)", "skrining_pekerja", "Skrining oleh puskesmas/tempat kerja mandiri")}
+            </div>
           </div>
         )}
 
