@@ -811,12 +811,16 @@ export default function App() {
             <select
               value={selectedPkmId}
               onChange={(e) => setSelectedPkmId(e.target.value)}
-              className="w-full text-xs font-semibold bg-white border border-gray-200 rounded-lg py-2 px-3 shadow-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="w-full text-xs font-semibold bg-white border border-gray-200 rounded-lg py-2 px-3 shadow-xs focus:ring-2 focus:ring-blue-500 focus:outline-none disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed"
+              disabled={userRole === "operator"}
             >
               {(userRole === "admin" || userRole === "superadmin") && (
                 <option value="aggregate">-- REKAP KABUPATEN (AGREGAT) --</option>
               )}
-              {LIST_PUSKESMAS.map((pkm) => (
+              {(userRole === "operator" 
+                ? LIST_PUSKESMAS.filter((p) => p.id === session?.puskesmasId)
+                : LIST_PUSKESMAS
+              ).map((pkm) => (
                 <option key={pkm.id} value={pkm.id}>
                   {pkm.name}
                 </option>
