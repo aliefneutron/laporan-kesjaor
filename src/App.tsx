@@ -61,6 +61,11 @@ export default function App() {
   const [auditLogs, setAuditLogs] = useState<any[]>([]);
   const [customUsers, setCustomUsers] = useState<any[]>([]);
 
+  // Password Change State
+  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
+  const [newOperatorPassword, setNewOperatorPassword] = useState("");
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+
   // Real-time listener for users collection (Superadmin-only)
   useEffect(() => {
     if (!session || session.role !== "superadmin") return;
@@ -104,6 +109,62 @@ export default function App() {
       );
     } catch (err) {
       handleFirestoreError(err, OperationType.DELETE, `users/${userId}`);
+      throw err;
+    }
+  };
+
+  const handleEditUser = async (userId: string, updatedData: any) => {
+    try {
+      await setDoc(doc(db, "users", userId), updatedData, { merge: true });
+      await writeAuditLog(
+        "Edit Pengguna",
+        `Memperbarui profil pengguna: ${updatedData.username}`
+      );
+    } catch (err) {
+      handleFirestoreError(err, OperationType.UPDATE, `users/${userId}`);
+      throw err;
+    }
+  };
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!session || !newOperatorPassword.trim()) return;
+
+    if (newOperatorPassword.trim().length < 4) {
+      alert("Password minimal harus 4 karakter.");
+      return;
+    }
+
+    setIsChangingPassword(true);
+    try {
+      // Find if user exists in the customUsers collection
+      // Since operator doesn't have customUsers loaded, we query it directly
+      // But actually, we can just query users by username
+      const usersRef = collection(db, "users");
+      // Create a specific id using the username to prevent duplicates if fallback
+      const safeId = `user_${session.username.replace(/[^a-zA-Z0-9]/g, "_")}`;
+      
+      const payload = {
+        id: safeId,
+        username: session.username,
+        password: newOperatorPassword.trim(),
+        role: session.role,
+        puskesmasId: session.puskesmasId || "",
+        puskesmasName: session.puskesmasName || "",
+        createdAt: new Date().toISOString(),
+      };
+
+      await setDoc(doc(db, "users", safeId), payload, { merge: true });
+      
+      await writeAuditLog("Ganti Password", "Pengguna mengganti password login mereka");
+      alert("Password berhasil diubah! Silakan gunakan password baru pada login berikutnya.");
+      setShowChangePasswordModal(false);
+      setNewOperatorPassword("");
+    } catch (err) {
+      console.error(err);
+      alert("Gagal mengganti password. Periksa koneksi Anda.");
+    } finally {
+      setIsChangingPassword(false);
     }
   };
 
@@ -441,21 +502,20 @@ export default function App() {
         ["A", "POS UKK (UPAYA KESEHATAN KERJA)", "", "", ""],
         ["1", "Jumlah Pos UKK Terbentuk", "Pos", v.posUkk_jumlah || 0, "Total Pos binaan yang ada"],
         ["2", "Jumlah Pos UKK Aktif", "Pos", v.posUkk_aktif || 0, "Pos dengan kegiatan rutin"],
-        ["B", "K3 PUSKESMAS (KESEHATAN DAN KESELAMATAN KERJA)", "", "", ""],
-        ["1", "Puskesmas menyelenggarakan K3 Puskesmas", "Puskesmas", isAggregate ? `${v.k3_puskesmas || 0} PKM` : (v.k3_puskesmas ? "YA" : "TIDAK"), "Sesuai Permenkes 52/2018"],
-        ["2", "Memiliki Tim K3 Puskesmas (SK Kepala PKM)", "Puskesmas", isAggregate ? `${v.k3_tim || 0} PKM` : (v.k3_tim ? "YA" : "TIDAK"), "SK Tim K3 aktif"],
-        ["3", "Melakukan Pemeriksaan Kesehatan Pegawai", "Pegawai", v.k3_pemeriksaanPegawai || 0, "Pemeriksaan berkala / pra-kerja"],
-        ["4", "Memiliki Sarana Prasarana K3 (Palu, APD, dll)", "Sarpras", v.k3_sarpras || 0, "Peralatan keselamatan standar"],
-        ["5", "Mengelola Limbah Medis Sesuai SOP", "SOP", isAggregate ? `${v.k3_limbah || 0} PKM` : (v.k3_limbah ? "YA" : "TIDAK"), "Sistem pembuangan limbah B3"],
-        ["6", "Melakukan Imunisasi Hepatitis B bagi Pegawai", "Pegawai", v.k3_imunisasi || 0, "Imunisasi preventif nakes"],
-        ["C", "GP2SP (GERAKAN PEKERJA PEREMPUAN SEHAT PRODUKTIF)", "", "", ""],
-        ["1", "Jumlah Perusahaan/Instansi Mitra GP2SP", "Perusahaan", v.gp2sp_perusahaan || 0, "Mitra industri / formal"],
-        ["2", "Jumlah Pekerja Perempuan Diperiksa Kesehatan", "Pekerja", v.gp2sp_periksaPekerja || 0, "Pemeriksaan Hb, gizi, dll"],
-        ["3", "Jumlah Pekerja Perempuan Mendapatkan KIE Gizi", "Pekerja", v.gp2sp_kieGizi || 0, "Konseling dan penyuluhan gizi"],
-        ["D", "PEMBINAAN KESEHATAN KERJA", "", "", ""],
-        ["1", "Jumlah Kelompok Pekerja Formal Binaan", "Kelompok", v.formal_binaan || 0, "Kelompok industri kecil / formal"],
-        ["2", "Jumlah Kelompok Pekerja Informal Binaan", "Kelompok", v.informal_binaan || 0, "Kelompok petani, nelayan, dll"],
-        ["3", "Jumlah Pekerja Informal yang Dilayani Kesehatan", "Pekerja", v.informal_dilayani || 0, "Kunjungan / pelayanan medis"],
+        ["B", "K3 PERKANTORAN", "", "", ""],
+        ["1", "Jumlah Kantor Pemerintah Tingkat Kecamatan, yaitu Kantor Kec, POLSEK, KORAMIL, KUA", "Kantor", v.k3_kantor_jumlah || 0, "Kantor Kec, POLSEK, KORAMIL, KUA"],
+        ["2", "Jumlah Kantor Kec, POLSEK, KORAMIL, KUA yang telah dilakukan penilaian & rekomendasi K3 Perkantoran", "Kantor", v.k3_kantor_dinilai || 0, "Telah dinilai K3"],
+        ["3", "Jumlah Kantor Kec, POLSEK, KORAMIL, KUA dengan kategori cukup min. 40%", "Kantor", v.k3_kantor_cukup || 0, "Kategori cukup min. 40%"],
+        ["4", "Jumlah Tempat Kerja lainnya (≤ 100 pekerja) melaksanakan K3 Perkantoran", "Tempat Kerja", v.k3_lain_kurang_100 || 0, "≤ 100 pekerja, kategori cukup min. 40%"],
+        ["5", "Jumlah Tempat Kerja lainnya (> 100 pekerja) melaksanakan K3 Perkantoran", "Tempat Kerja", v.k3_lain_lebih_100 || 0, "> 100 pekerja, kategori cukup min. 40%"],
+        ["C", "GP2SP", "", "", ""],
+        ["1", "Jumlah Tempat Kerja Formal yang dibina GP2SP (sosialisasi, skrining, dsb)", "", "", ""],
+        ["A", "Jumlah tempat kerja yang memiliki ≤ 50 pekerja perempuan", "Tempat Kerja", v.gp2sp_formal_bina_kurang_50 || 0, "≤ 50 pekerja perempuan"],
+        ["B", "Jumlah tempat kerja yang memiliki > 50 pekerja perempuan", "Tempat Kerja", v.gp2sp_formal_bina_lebih_50 || 0, "> 50 pekerja perempuan"],
+        ["2", "Jumlah Tempat Kerja Formal melaksanakan GP2SP (min. 40% instrumen GP2SP)", "Tempat Kerja", v.gp2sp_formal_laksana || 0, "Melaksanakan min. 40%"],
+        ["D", "KESEHATAN KERJA TEMPAT KERJA FORMAL (RPJMN)", "", "", ""],
+        ["1", "Jumlah tempat kerja sektor formal (memiliki > 100 pekerja dan/atau risiko tinggi)", "Tempat Kerja", v.formal_jumlah || 0, "Sektor formal"],
+        ["2", "Tempat kerja sektor formal (memiliki > 100 pekerja dan/atau risiko tinggi) yang melaksanakan kesehatan kerja", "Tempat Kerja", v.formal_kesja || 0, "Melaksanakan kesja"],
         ["E", "PENYAKIT AKIBAT KERJA (PAK) & KECELAKAAN KERJA", "", "", ""],
         ["E.1", "PENYAKIT AKIBAT KERJA (PAK)", "", "", ""],
       ];
@@ -467,6 +527,10 @@ export default function App() {
         rows.push(["", `${disease.name} (${disease.icd || "-"}) - Rujukan PAK`, "Kasus", dVal.rujukan || 0, "Kasus dirujuk ke faskes sekunder"]);
       });
       
+      rows.push(
+        ["", "Apakah memiliki dokter PAK (Ya/Tidak)", "Ya/Tidak", isAggregate ? `${v.pak_dokter || 0} PKM` : (v.pak_dokter ? "Ya" : "Tidak"), "Ketersediaan dokter PAK"]
+      );
+
       rows.push(
         ["E.2", "KECELAKAAN KERJA (KK)", "", "", ""],
         ["1", "Tertusuk Jarum / Benda Tajam Medis", "Kasus", v.kk_jarum || 0, "Kejadian pada nakes / pegawai"],
@@ -616,9 +680,17 @@ export default function App() {
             <span className="bg-blue-900 px-2 py-0.5 rounded text-[10px] font-bold uppercase text-white tracking-wide">
               {session.username}
             </span>
+            {session.role !== "superadmin" && (
+              <button
+                onClick={() => setShowChangePasswordModal(true)}
+                className="hover:text-blue-200 transition-colors underline flex items-center gap-1 cursor-pointer font-bold text-[10px]"
+              >
+                Ganti Password
+              </button>
+            )}
             <button
               onClick={handleLogout}
-              className="hover:text-white transition-colors underline flex items-center gap-1 cursor-pointer font-bold"
+              className="hover:text-white transition-colors underline flex items-center gap-1 cursor-pointer font-bold text-[10px] ml-2"
             >
               <LogOut className="w-3 h-3" /> Keluar
             </button>
@@ -1047,6 +1119,7 @@ export default function App() {
                 customUsers={customUsers}
                 onAddUser={handleAddUser}
                 onDeleteUser={handleDeleteUser}
+                onEditUser={handleEditUser}
               />
             )}
           </>
@@ -1079,6 +1152,57 @@ export default function App() {
           cancelText={confirmModal.cancelText}
           type={confirmModal.type}
         />
+      )}
+
+      {/* Change Password Modal */}
+      {showChangePasswordModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden animate-zoom-in">
+            <div className="bg-blue-950 p-4 border-b border-blue-900">
+              <h3 className="text-white font-bold text-base flex items-center gap-2">
+                <ShieldCheck className="w-5 h-5 text-blue-400" /> Ganti Password
+              </h3>
+            </div>
+            <form onSubmit={handleChangePassword} className="p-5 space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-gray-700 mb-1">Username Saat Ini</label>
+                <input
+                  type="text"
+                  readOnly
+                  value={session.username}
+                  className="w-full text-sm bg-gray-100 border border-gray-200 rounded-lg py-2 px-3 text-gray-500 cursor-not-allowed"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-700 mb-1">Password Baru <span className="text-red-500">*</span></label>
+                <input
+                  type="password"
+                  value={newOperatorPassword}
+                  onChange={(e) => setNewOperatorPassword(e.target.value)}
+                  placeholder="Minimal 4 karakter"
+                  className="w-full text-sm bg-white border border-gray-300 rounded-lg py-2 px-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  required
+                />
+              </div>
+              <div className="flex justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowChangePasswordModal(false)}
+                  className="px-4 py-2 text-sm font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors cursor-pointer"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  disabled={isChangingPassword || newOperatorPassword.trim().length < 4}
+                  className="px-4 py-2 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors disabled:opacity-50 flex items-center gap-2 cursor-pointer"
+                >
+                  {isChangingPassword ? "Menyimpan..." : "Simpan Password"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       )}
     </div>
   );

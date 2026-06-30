@@ -18,8 +18,8 @@ import {
   Sparkles,
   Info,
   UserPlus,
-  Shield
-} from "lucide-react";
+  Shield,
+  Edit
 import { motion } from "motion/react";
 import ConfirmationModal from "./ConfirmationModal";
 
@@ -33,6 +33,7 @@ interface SuperadminPanelProps {
   customUsers: any[];
   onAddUser: (user: any) => Promise<void>;
   onDeleteUser: (userId: string, targetUsername: string) => Promise<void>;
+  onEditUser: (userId: string, updatedData: any) => Promise<void>;
 }
 
 export default function SuperadminPanel({
@@ -44,7 +45,8 @@ export default function SuperadminPanel({
 
   customUsers,
   onAddUser,
-  onDeleteUser
+  onDeleteUser,
+  onEditUser
 }: SuperadminPanelProps) {
   const [activeSubTab, setActiveSubTab] = useState<"audit" | "pkm" | "users" | "settings">("audit");
   const [pkmQuery, setPkmQuery] = useState("");
@@ -83,6 +85,7 @@ export default function SuperadminPanel({
   const [formError, setFormError] = useState<string | null>(null);
   const [formSuccess, setFormSuccess] = useState<string | null>(null);
   const [isSubmittingUser, setIsSubmittingUser] = useState(false);
+  const [editingUserId, setEditingUserId] = useState<string | null>(null);
 
   // Settings mock state (simulated)
   const [maintenanceMode, setMaintenanceMode] = useState(false);
@@ -153,9 +156,9 @@ export default function SuperadminPanel({
       return;
     }
 
-    // Check duplicate
+    // Check duplicate username only if creating new, or if editing and changing username
     const isDuplicate = customUsers.some(
-      (u) => u.username.toLowerCase().trim() === cleanUser
+      (u) => u.username.toLowerCase().trim() === cleanUser && u.id !== editingUserId
     );
     if (isDuplicate) {
       setFormError("Nama Pengguna (Username) sudah terdaftar!");
@@ -178,12 +181,25 @@ export default function SuperadminPanel({
         userPayload.puskesmasName = selectedPkm?.name || "";
       }
 
-      await onAddUser(userPayload);
-      setFormSuccess(`Pengguna ${cleanUser} berhasil ditambahkan!`);
+      if (editingUserId) {
+        userPayload.id = editingUserId;
+        // preserve original createdAt
+        const existing = customUsers.find(u => u.id === editingUserId);
+        if (existing && existing.createdAt) {
+          userPayload.createdAt = existing.createdAt;
+        }
+        await onEditUser(editingUserId, userPayload);
+        setFormSuccess(`Pengguna ${cleanUser} berhasil diperbarui!`);
+      } else {
+        await onAddUser(userPayload);
+        setFormSuccess(`Pengguna ${cleanUser} berhasil ditambahkan!`);
+      }
+
       setNewUsername("");
       setNewPassword("");
+      setEditingUserId(null);
     } catch (err) {
-      setFormError("Gagal menambahkan pengguna ke database.");
+      setFormError(editingUserId ? "Gagal memperbarui pengguna." : "Gagal menambahkan pengguna ke database.");
     } finally {
       setIsSubmittingUser(false);
     }
@@ -513,8 +529,10 @@ export default function SuperadminPanel({
               {/* Left Side: Create User Form */}
               <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-xs space-y-4">
                 <div className="flex items-center gap-2 pb-2 border-b border-gray-100 text-gray-800">
-                  <UserPlus className="w-4 h-4 text-blue-600" />
-                  <h4 className="font-bold text-xs uppercase tracking-wide">Tambah Pengguna Baru</h4>
+                  {editingUserId ? <Edit className="w-4 h-4 text-amber-600" /> : <UserPlus className="w-4 h-4 text-blue-600" />}
+                  <h4 className="font-bold text-xs uppercase tracking-wide">
+                    {editingUserId ? "Edit Pengguna" : "Tambah Pengguna Baru"}
+                  </h4>
                 </div>
 
                 <form onSubmit={handleCreateUser} className="space-y-4">
@@ -601,23 +619,39 @@ export default function SuperadminPanel({
                     </div>
                   )}
 
-                  <button
-                    type="submit"
-                    disabled={isSubmittingUser}
-                    className="w-full bg-blue-600 hover:bg-blue-500 text-white py-2.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1.5 active:scale-98 disabled:opacity-50 cursor-pointer"
-                  >
-                    {isSubmittingUser ? (
-                      <>
-                        <span className="w-3.5 h-3.5 border-2 border-white/20 border-t-white rounded-full animate-spin"></span>
-                        <span>Menyimpan...</span>
-                      </>
-                    ) : (
-                      <>
-                        <UserPlus className="w-4 h-4" />
-                        <span>Simpan Pengguna</span>
-                      </>
+                  <div className="flex gap-2">
+                    <button
+                      type="submit"
+                      disabled={isSubmittingUser}
+                      className="flex-1 bg-blue-600 hover:bg-blue-500 text-white py-2.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1.5 active:scale-98 disabled:opacity-50 cursor-pointer"
+                    >
+                      {isSubmittingUser ? (
+                        <>
+                          <span className="w-3.5 h-3.5 border-2 border-white/20 border-t-white rounded-full animate-spin"></span>
+                          <span>Menyimpan...</span>
+                        </>
+                      ) : (
+                        <>
+                          {editingUserId ? <Edit className="w-4 h-4" /> : <UserPlus className="w-4 h-4" />}
+                          <span>{editingUserId ? "Simpan Perubahan" : "Simpan Pengguna"}</span>
+                        </>
+                      )}
+                    </button>
+                    {editingUserId && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEditingUserId(null);
+                          setNewUsername("");
+                          setNewPassword("");
+                          setNewRole("operator");
+                        }}
+                        className="px-3 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg text-xs font-bold transition-all"
+                      >
+                        Batal
+                      </button>
                     )}
-                  </button>
+                  </div>
                 </form>
               </div>
 
@@ -678,7 +712,21 @@ export default function SuperadminPanel({
                               <td className="px-3 py-2.5 text-[11px] font-semibold text-gray-600">
                                 {u.role === "operator" ? u.puskesmasName || "-" : "Sistem Kabupaten"}
                               </td>
-                              <td className="px-3 py-2.5 text-center">
+                              <td className="px-3 py-2.5 text-center whitespace-nowrap">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setEditingUserId(u.id);
+                                    setNewUsername(u.username);
+                                    setNewPassword(u.password);
+                                    setNewRole(u.role);
+                                    if (u.puskesmasId) setNewPkmId(u.puskesmasId);
+                                  }}
+                                  className="p-1 text-amber-500 hover:text-amber-700 hover:bg-amber-50 rounded transition-all cursor-pointer mr-1"
+                                  title="Edit Pengguna"
+                                >
+                                  <Edit className="w-4 h-4" />
+                                </button>
                                 <button
                                   type="button"
                                   onClick={() => handleDeleteUserClick(u.id, u.username)}

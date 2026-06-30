@@ -47,7 +47,7 @@ export default function ReportFormKerja({
     });
   };
 
-  const handleToggle = (key: "k3_puskesmas" | "k3_tim") => {
+  const handleToggle = (key: "pak_dokter") => {
     if (isSubmitted) return;
     setValues((prev) => ({
       ...prev,
@@ -56,8 +56,8 @@ export default function ReportFormKerja({
   };
 
   const tabs = [
-    { id: "pos_k3", name: "Pos UKK & K3 PKM" },
-    { id: "gp2sp_binaan", name: "GP2SP & Binaan" },
+    { id: "pos_k3", name: "Pos UKK & K3 Perkantoran" },
+    { id: "gp2sp_binaan", name: "GP2SP & RPJMN (Kesehatan Kerja)" },
     { id: "pak_ptk", name: "Penyakit (PAK, Terduga, Rujukan)" },
     { id: "kk", name: "Kecelakaan Kerja" },
   ] as const;
@@ -143,75 +143,35 @@ export default function ReportFormKerja({
             {renderNumberInput("Jumlah Pos UKK Aktif", "posUkk_aktif", "Pos UKK yang rutin melakukan pelayanan bulanan")}
 
             <h4 className="font-bold text-blue-900 text-sm mt-6 mb-2 border-l-4 border-blue-700 pl-2 uppercase tracking-wide">
-              B. K3 PUSKESMAS (Kesehatan & Keselamatan Kerja)
+            <h4 className="font-bold text-blue-900 text-sm mt-6 mb-2 border-l-4 border-blue-700 pl-2 uppercase tracking-wide">
+              A. K3 PERKANTORAN
             </h4>
             
-            {/* Toggle switch for K3 Penyelenggara */}
-            <div className="flex items-center justify-between p-3 border-b border-gray-100">
-              <div>
-                <label className="text-sm font-semibold text-gray-700">Menyelenggarakan K3 Puskesmas?</label>
-                <p className="text-xs text-gray-400 italic">Melaksanakan standar pelayanan K3 di Puskesmas</p>
-              </div>
-              <button
-                type="button"
-                disabled={isSubmitted}
-                onClick={() => handleToggle("k3_puskesmas")}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none disabled:opacity-60 disabled:cursor-not-allowed ${
-                  values.k3_puskesmas ? "bg-blue-900" : "bg-gray-200"
-                }`}
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    values.k3_puskesmas ? "translate-x-6" : "translate-x-1"
-                  }`}
-                />
-              </button>
-            </div>
-
-            {/* Toggle switch for K3 Tim */}
-            <div className="flex items-center justify-between p-3 border-b border-gray-100">
-              <div>
-                <label className="text-sm font-semibold text-gray-700">Memiliki Tim K3 Puskesmas (SK)?</label>
-                <p className="text-xs text-gray-400 italic">Sudah ada SK dari Kepala Puskesmas untuk Tim K3</p>
-              </div>
-              <button
-                type="button"
-                disabled={isSubmitted}
-                onClick={() => handleToggle("k3_tim")}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none disabled:opacity-60 disabled:cursor-not-allowed ${
-                  values.k3_tim ? "bg-blue-900" : "bg-gray-200"
-                }`}
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    values.k3_tim ? "translate-x-6" : "translate-x-1"
-                  }`}
-                />
-              </button>
-            </div>
-
-            {renderNumberInput("Jumlah Pemeriksaan Kesehatan Berkala Pegawai", "k3_pemeriksaanPegawai", "Pegawai Puskesmas yang diperiksa kesehatannya")}
-            {renderNumberInput("Jumlah Sarana Prasarana K3 Memenuhi Standar", "k3_sarpras", "Jumlah unit APAR, tanda evakuasi, rambu bahaya, dll")}
-            {renderNumberInput("Pengelolaan Limbah Medis Sesuai Standar", "k3_limbah", "Kepatuhan SOP penanganan limbah klinis/medis")}
-            {renderNumberInput("Jumlah Pegawai Mendapat Imunisasi Hep B", "k3_imunisasi", "Nakes/Pegawai Puskesmas yang telah divaksin Hepatitis B")}
+            {renderNumberInput("Kantor Kec, POLSEK, KORAMIL, KUA", "k3_kantor_jumlah", "Jumlah Kantor Pemerintah Tingkat Kecamatan")}
+            {renderNumberInput("Kantor Dinilai & Rekomendasi K3", "k3_kantor_dinilai", "Telah dilakukan penilaian & rekomendasi K3 Perkantoran")}
+            {renderNumberInput("Kantor Kategori Cukup Min 40%", "k3_kantor_cukup", "Jumlah Kantor Kec, POLSEK, KORAMIL, KUA")}
+            {renderNumberInput("Tempat Kerja Lain (≤100 pekerja) Melaksanakan K3", "k3_lain_kurang_100", "Kategori cukup min. 40%")}
+            {renderNumberInput("Tempat Kerja Lain (>100 pekerja) Melaksanakan K3", "k3_lain_lebih_100", "Kategori cukup min. 40%")}
           </div>
         )}
 
         {activeTab === "gp2sp_binaan" && (
           <div className="space-y-4">
             <h4 className="font-bold text-blue-900 text-sm mb-2 border-l-4 border-blue-700 pl-2 uppercase tracking-wide">
-              C. Gerakan Pekerja Perempuan Sehat Produktif (GP2SP)
+              B. GP2SP
             </h4>
-            {renderNumberInput("Jumlah Perusahaan/Instansi Pelaksana GP2SP", "gp2sp_perusahaan", "Perusahaan di wilayah kerja yang menerapkan GP2SP")}
-            {renderNumberInput("Pekerja Perempuan yang Diperiksa Kesehatannya", "gp2sp_periksaPekerja", "Skrining kesehatan reproduksi, Hb/anemia, dll")}
-            {renderNumberInput("Jumlah Kegiatan KIE Gizi Pekerja Perempuan", "gp2sp_kieGizi", "Komunikasi, Informasi, & Edukasi gizi")}
+            <div className="pl-4">
+              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 block">1. Tempat Kerja Formal yang dibina GP2SP</label>
+              {renderNumberInput("A. Memiliki ≤ 50 pekerja perempuan", "gp2sp_formal_bina_kurang_50")}
+              {renderNumberInput("B. Memiliki > 50 pekerja perempuan", "gp2sp_formal_bina_lebih_50")}
+            </div>
+            {renderNumberInput("2. Tempat Kerja Formal melaksanakan GP2SP", "gp2sp_formal_laksana", "Minimal 40% instrumen GP2SP")}
 
             <h4 className="font-bold text-blue-900 text-sm mt-6 mb-2 border-l-4 border-blue-700 pl-2 uppercase tracking-wide">
-              D. Pembinaan Kesehatan Kerja Sektor Formal & Informal
+              C. Kesehatan Kerja Tempat Kerja Formal (RPJMN)
             </h4>
-            {renderNumberInput("Jumlah Tempat Kerja Sektor Formal Binaan", "formal_binaan", "Kantor, pabrik, atau BUMN/Swasta")}
-            {renderNumberInput("Jumlah Tempat Kerja Sektor Informal Binaan", "informal_binaan", "Pasar, kelompok tani, nelayan, UMKM, dll")}
-            {renderNumberInput("Jumlah Pekerja Informal Dilayani Kesehatan Kerja", "informal_dilayani", "Layanan kuratif, preventif, atau penyuluhan di lapangan")}
+            {renderNumberInput("Jumlah tempat kerja sektor formal", "formal_jumlah", "Memiliki > 100 pekerja dan/atau risiko tinggi")}
+            {renderNumberInput("Tempat kerja formal melaksanakan kesja", "formal_kesja", "Sesuai instrumen kesja")}
           </div>
         )}
 
@@ -284,6 +244,27 @@ export default function ReportFormKerja({
                   </div>
                 );
               })}
+            </div>
+
+            <div className="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-xl mt-4">
+              <div>
+                <label className="text-sm font-semibold text-gray-800">Apakah memiliki dokter PAK (Ya/Tidak)</label>
+                <p className="text-xs text-gray-500 italic">Ketersediaan dokter Penyakit Akibat Kerja di wilayah kerja</p>
+              </div>
+              <button
+                type="button"
+                disabled={isSubmitted}
+                onClick={() => handleToggle("pak_dokter")}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none disabled:opacity-60 disabled:cursor-not-allowed ${
+                  values.pak_dokter ? "bg-red-600" : "bg-gray-200"
+                }`}
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    values.pak_dokter ? "translate-x-6" : "translate-x-1"
+                  }`}
+                />
+              </button>
             </div>
           </div>
         )}

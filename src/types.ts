@@ -74,23 +74,22 @@ export interface KerjaValues {
   // POS UKK
   posUkk_jumlah: number;
   posUkk_aktif: number;
-  // K3 PUSKESMAS
-  k3_puskesmas: number; // 1 = ya, 0 = tidak
-  k3_tim: number;        // 1 = ya, 0 = tidak
-  k3_pemeriksaanPegawai: number;
-  k3_sarpras: number;
-  k3_limbah: number;
-  k3_imunisasi: number;
+  // K3 PERKANTORAN
+  k3_kantor_jumlah: number;
+  k3_kantor_dinilai: number;
+  k3_kantor_cukup: number;
+  k3_lain_kurang_100: number;
+  k3_lain_lebih_100: number;
   // GP2SP
-  gp2sp_perusahaan: number;
-  gp2sp_periksaPekerja: number;
-  gp2sp_kieGizi: number;
-  // KESEHATAN KERJA BINAAN
-  formal_binaan: number;
-  informal_binaan: number;
-  informal_dilayani: number;
+  gp2sp_formal_bina_kurang_50: number;
+  gp2sp_formal_bina_lebih_50: number;
+  gp2sp_formal_laksana: number;
+  // KESEHATAN KERJA TEMPAT KERJA FORMAL (RPJMN)
+  formal_jumlah: number;
+  formal_kesja: number;
   // NEW DISEASE STRUCTURE (PAK, TERDUGA PAK, RUJUKAN PAK)
   diseases: Record<string, { pak: number; terduga: number; rujukan: number }>;
+  pak_dokter: number; // 1 = ya, 0 = tidak
   // KECELAKAAN KERJA (KK)
   kk_jarum: number;
   kk_kimia: number;
@@ -193,19 +192,18 @@ LIST_DISEASES.forEach((d) => {
 export const INITIAL_KERJA_VALUES: KerjaValues = {
   posUkk_jumlah: 0,
   posUkk_aktif: 0,
-  k3_puskesmas: 0,
-  k3_tim: 0,
-  k3_pemeriksaanPegawai: 0,
-  k3_sarpras: 0,
-  k3_limbah: 0,
-  k3_imunisasi: 0,
-  gp2sp_perusahaan: 0,
-  gp2sp_periksaPekerja: 0,
-  gp2sp_kieGizi: 0,
-  formal_binaan: 0,
-  informal_binaan: 0,
-  informal_dilayani: 0,
+  k3_kantor_jumlah: 0,
+  k3_kantor_dinilai: 0,
+  k3_kantor_cukup: 0,
+  k3_lain_kurang_100: 0,
+  k3_lain_lebih_100: 0,
+  gp2sp_formal_bina_kurang_50: 0,
+  gp2sp_formal_bina_lebih_50: 0,
+  gp2sp_formal_laksana: 0,
+  formal_jumlah: 0,
+  formal_kesja: 0,
   diseases: initialDiseases,
+  pak_dokter: 0,
   kk_jarum: 0,
   kk_kimia: 0,
   kk_cedera: 0,

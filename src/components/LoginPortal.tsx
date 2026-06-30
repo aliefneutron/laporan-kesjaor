@@ -62,13 +62,13 @@ export default function LoginPortal({ onLoginSuccess }: LoginPortalProps) {
     const lower = userStr.toLowerCase().trim();
     
     // 1. Superadmin check
-    if (lower.includes("superadmin")) {
+    if (lower === "superadmin") {
       return {
         role: "superadmin" as const,
-        username: userStr,
+        username: "superadmin",
         puskesmasId: undefined,
         puskesmasName: undefined,
-        expectedPassword: "superadmin123",
+        expectedPassword: "alief03",
       };
     }
     

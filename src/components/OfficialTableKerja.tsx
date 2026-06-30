@@ -74,110 +74,96 @@ export default function OfficialTableKerja({
             <td className="border border-gray-300 px-3 py-1.5 text-gray-500 italic">Pos dengan kegiatan rutin</td>
           </tr>
 
-          {/* B. K3 PUSKESMAS */}
+          {/* B. K3 PERKANTORAN */}
           <tr className="bg-gray-100 font-bold text-gray-800">
             <td className="border border-gray-300 px-3 py-1.5 text-center">B</td>
-            <td className="border border-gray-300 px-3 py-1.5" colSpan={4}>K3 PUSKESMAS (KESEHATAN DAN KESELAMATAN KERJA)</td>
+            <td className="border border-gray-300 px-3 py-1.5" colSpan={4}>K3 PERKANTORAN</td>
           </tr>
           <tr>
             <td className="border border-gray-300 px-3 py-1.5 text-center">1</td>
-            <td className="border border-gray-300 px-3 py-1.5">Puskesmas menyelenggarakan K3 Puskesmas</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-center">Puskesmas</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-center font-semibold">
-              {isAggregate ? `${data.k3_puskesmas} PKM` : (data.k3_puskesmas ? "YA" : "TIDAK")}
-            </td>
-            <td className="border border-gray-300 px-3 py-1.5 text-gray-500 italic">Sesuai Permenkes 52/2018</td>
+            <td className="border border-gray-300 px-3 py-1.5">Jumlah Kantor Pemerintah Tingkat Kecamatan, yaitu Kantor Kec, POLSEK, KORAMIL, KUA</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-center">Kantor</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-center font-semibold">{data.k3_kantor_jumlah}</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-gray-500 italic">Kantor Kec, POLSEK, KORAMIL, KUA</td>
           </tr>
           <tr>
             <td className="border border-gray-300 px-3 py-1.5 text-center">2</td>
-            <td className="border border-gray-300 px-3 py-1.5">Memiliki Tim K3 Puskesmas (SK Kepala PKM)</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-center">Puskesmas</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-center font-semibold">
-              {isAggregate ? `${data.k3_tim} PKM` : (data.k3_tim ? "YA" : "TIDAK")}
-            </td>
-            <td className="border border-gray-300 px-3 py-1.5 text-gray-500 italic">SK Tim K3 aktif</td>
+            <td className="border border-gray-300 px-3 py-1.5">Jumlah Kantor Kec, POLSEK, KORAMIL, KUA yang telah dilakukan penilaian & rekomendasi K3 Perkantoran</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-center">Kantor</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-center font-semibold">{data.k3_kantor_dinilai}</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-gray-500 italic">Telah dinilai K3</td>
           </tr>
           <tr>
             <td className="border border-gray-300 px-3 py-1.5 text-center">3</td>
-            <td className="border border-gray-300 px-3 py-1.5">Jumlah Pemeriksaan Kesehatan Berkala Pegawai</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-center">Orang</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-center font-semibold">{data.k3_pemeriksaanPegawai}</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-gray-500 italic">Pemeriksaan fisik & penunjang</td>
+            <td className="border border-gray-300 px-3 py-1.5">Jumlah Kantor Kec, POLSEK, KORAMIL, KUA dengan kategori cukup min. 40%</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-center">Kantor</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-center font-semibold">{data.k3_kantor_cukup}</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-gray-500 italic">Kategori cukup min. 40%</td>
           </tr>
           <tr>
             <td className="border border-gray-300 px-3 py-1.5 text-center">4</td>
-            <td className="border border-gray-300 px-3 py-1.5">Sarana Prasarana K3 Memenuhi Standar</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-center">Unit</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-center font-semibold">{data.k3_sarpras}</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-gray-500 italic">Termasuk APAR, rambu, dll</td>
+            <td className="border border-gray-300 px-3 py-1.5">Jumlah Tempat Kerja lainnya (≤ 100 pekerja) melaksanakan K3 Perkantoran (kategori cukup min. 40%)</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-center">Tempat Kerja</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-center font-semibold">{data.k3_lain_kurang_100}</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-gray-500 italic">≤ 100 pekerja</td>
           </tr>
           <tr>
             <td className="border border-gray-300 px-3 py-1.5 text-center">5</td>
-            <td className="border border-gray-300 px-3 py-1.5">Pengelolaan Limbah Medis sesuai Standar</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-center">Kegiatan</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-center font-semibold">{data.k3_limbah}</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-gray-500 italic">Kepatuhan pembuangan limbah</td>
-          </tr>
-          <tr>
-            <td className="border border-gray-300 px-3 py-1.5 text-center">6</td>
-            <td className="border border-gray-300 px-3 py-1.5">Pegawai Puskesmas Mendapat Imunisasi Hep B</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-center">Orang</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-center font-semibold">{data.k3_imunisasi}</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-gray-500 italic">Imunisasi bagi nakes berisiko</td>
+            <td className="border border-gray-300 px-3 py-1.5">Jumlah Tempat Kerja lainnya (&gt; 100 pekerja) melaksanakan K3 Perkantoran (kategori cukup min. 40%)</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-center">Tempat Kerja</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-center font-semibold">{data.k3_lain_lebih_100}</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-gray-500 italic">&gt; 100 pekerja</td>
           </tr>
 
           {/* C. GP2SP */}
           <tr className="bg-gray-100 font-bold text-gray-800">
             <td className="border border-gray-300 px-3 py-1.5 text-center">C</td>
-            <td className="border border-gray-300 px-3 py-1.5" colSpan={4}>GP2SP (GERAKAN PEKERJA PEREMPUAN SEHAT PRODUKTIF)</td>
+            <td className="border border-gray-300 px-3 py-1.5" colSpan={4}>GP2SP</td>
           </tr>
           <tr>
             <td className="border border-gray-300 px-3 py-1.5 text-center">1</td>
-            <td className="border border-gray-300 px-3 py-1.5">Jumlah Perusahaan melaksanakan GP2SP</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-center">Perusahaan</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-center font-semibold">{data.gp2sp_perusahaan}</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-gray-500 italic">Perusahaan/instansi sasaran</td>
+            <td className="border border-gray-300 px-3 py-1.5 font-bold" colSpan={4}>Jumlah Tempat Kerja Formal yang dibina GP2SP (sosialisasi, skrining, dsb)</td>
+          </tr>
+          <tr>
+            <td className="border border-gray-300 px-3 py-1.5 text-center"></td>
+            <td className="border border-gray-300 px-3 py-1.5 pl-8">A. Jumlah tempat kerja yang memiliki ≤ 50 pekerja perempuan</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-center">Tempat Kerja</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-center font-semibold">{data.gp2sp_formal_bina_kurang_50}</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-gray-500 italic">≤ 50 pekerja perempuan</td>
+          </tr>
+          <tr>
+            <td className="border border-gray-300 px-3 py-1.5 text-center"></td>
+            <td className="border border-gray-300 px-3 py-1.5 pl-8">B. Jumlah tempat kerja yang memiliki &gt; 50 pekerja perempuan</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-center">Tempat Kerja</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-center font-semibold">{data.gp2sp_formal_bina_lebih_50}</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-gray-500 italic">&gt; 50 pekerja perempuan</td>
           </tr>
           <tr>
             <td className="border border-gray-300 px-3 py-1.5 text-center">2</td>
-            <td className="border border-gray-300 px-3 py-1.5">Pekerja Perempuan Diperiksa Kesehatan Gizi/Anemia</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-center">Orang</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-center font-semibold">{data.gp2sp_periksaPekerja}</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-gray-500 italic">Skrining Hb & status gizi</td>
-          </tr>
-          <tr>
-            <td className="border border-gray-300 px-3 py-1.5 text-center">3</td>
-            <td className="border border-gray-300 px-3 py-1.5">Jumlah KIE Gizi & Kesehatan Reproduksi</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-center">Kali</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-center font-semibold">{data.gp2sp_kieGizi}</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-gray-500 italic">Penyuluhan / sosialisasi</td>
+            <td className="border border-gray-300 px-3 py-1.5">Jumlah Tempat Kerja Formal melaksanakan GP2SP (min. 40% instrumen GP2SP)</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-center">Tempat Kerja</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-center font-semibold">{data.gp2sp_formal_laksana}</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-gray-500 italic">Melaksanakan min. 40%</td>
           </tr>
 
-          {/* D. PEMBINAAN KESEHATAN KERJA */}
+          {/* D. KESEHATAN KERJA TEMPAT KERJA FORMAL (RPJMN) */}
           <tr className="bg-gray-100 font-bold text-gray-800">
             <td className="border border-gray-300 px-3 py-1.5 text-center">D</td>
-            <td className="border border-gray-300 px-3 py-1.5" colSpan={4}>PEMBINAAN KESEHATAN KERJA SEKTOR FORMAL & INFORMAL</td>
+            <td className="border border-gray-300 px-3 py-1.5" colSpan={4}>KESEHATAN KERJA TEMPAT KERJA FORMAL (RPJMN)</td>
           </tr>
           <tr>
             <td className="border border-gray-300 px-3 py-1.5 text-center">1</td>
-            <td className="border border-gray-300 px-3 py-1.5">Jumlah Tempat Kerja Formal Binaan</td>
+            <td className="border border-gray-300 px-3 py-1.5">Jumlah tempat kerja sektor formal (memiliki &gt; 100 pekerja dan/atau risiko tinggi)</td>
             <td className="border border-gray-300 px-3 py-1.5 text-center">Tempat Kerja</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-center font-semibold">{data.formal_binaan}</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-gray-500 italic">Pabrik, kantor, instansi</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-center font-semibold">{data.formal_jumlah}</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-gray-500 italic">Sektor formal</td>
           </tr>
           <tr>
             <td className="border border-gray-300 px-3 py-1.5 text-center">2</td>
-            <td className="border border-gray-300 px-3 py-1.5">Jumlah Tempat Kerja Informal Binaan</td>
+            <td className="border border-gray-300 px-3 py-1.5">Tempat kerja sektor formal (memiliki &gt; 100 pekerja dan/atau risiko tinggi) yang melaksanakan kesehatan kerja sesuai instrumen kesja</td>
             <td className="border border-gray-300 px-3 py-1.5 text-center">Tempat Kerja</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-center font-semibold">{data.informal_binaan}</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-gray-500 italic">Pertanian, nelayan, pasar, UMKM</td>
-          </tr>
-          <tr>
-            <td className="border border-gray-300 px-3 py-1.5 text-center">3</td>
-            <td className="border border-gray-300 px-3 py-1.5 font-medium">Jumlah Pekerja Informal Dilayani Kesehatan Kerja</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-center">Orang</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-center font-bold text-blue-900">{data.informal_dilayani}</td>
-            <td className="border border-gray-300 px-3 py-1.5 text-gray-500 italic">Layanan kuratif & preventif</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-center font-semibold">{data.formal_kesja}</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-gray-500 italic">Melaksanakan kesja</td>
           </tr>
 
           {/* E. PENYAKIT AKIBAT KERJA (PAK) */}
@@ -217,6 +203,11 @@ export default function OfficialTableKerja({
               </tr>
             );
           })}
+          <tr>
+            <td className="border border-gray-300 px-3 py-1.5 text-center font-bold" colSpan={3}>Apakah memiliki dokter PAK (Ya/Tidak)</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-center font-bold text-red-700">{isAggregate ? `${data.pak_dokter} PKM` : (data.pak_dokter ? "Ya" : "Tidak")}</td>
+            <td className="border border-gray-300 px-3 py-1.5 text-gray-500 italic">Ketersediaan dokter PAK</td>
+          </tr>
 
           {/* F. KECELAKAAN KERJA (KK) */}
           <tr className="bg-gray-100 font-bold text-gray-800">
