@@ -51,6 +51,7 @@ export default function SuperadminPanel({
 }: SuperadminPanelProps) {
   const [activeSubTab, setActiveSubTab] = useState<"audit" | "pkm" | "users" | "settings">("audit");
   const [pkmQuery, setPkmQuery] = useState("");
+  const [auditQuery, setAuditQuery] = useState("");
   const [isWiping, setIsWiping] = useState(false);
 
   
@@ -114,6 +115,17 @@ export default function SuperadminPanel({
       pkm.name.toLowerCase().includes(query) ||
       pkm.kecamatan.toLowerCase().includes(query) ||
       pkm.id.toLowerCase().includes(query)
+    );
+  });
+
+  // Filter Audit Logs
+  const filteredAuditLogs = auditLogs.filter((log) => {
+    const query = auditQuery.toLowerCase();
+    return (
+      (log.user || "").toLowerCase().includes(query) ||
+      (log.role || "").toLowerCase().includes(query) ||
+      (log.action || "").toLowerCase().includes(query) ||
+      (log.details || "").toLowerCase().includes(query)
     );
   });
 
@@ -339,7 +351,7 @@ export default function SuperadminPanel({
         {/* 1. AUDIT TRAIL LOGS VIEW */}
         {activeSubTab === "audit" && (
           <div className="space-y-4">
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
               <div>
                 <h3 className="font-bold text-sm text-gray-800 uppercase tracking-wide">
                   Daftar Aktivitas Petugas & Sistem (Real-time Audit Logs)
@@ -348,12 +360,28 @@ export default function SuperadminPanel({
                   Melacak secara transparan setiap aksi simpan, kirim draf, maupun resetting laporan di Kabupaten Sumenep.
                 </p>
               </div>
-              <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200">
-                Pencatatan Otomatis Aktif
-              </span>
+              
+              {/* Search Bar for Audit Logs */}
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <div className="relative w-full sm:w-64">
+                  <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 pointer-events-none">
+                    <Search className="w-3.5 h-3.5" />
+                  </span>
+                  <input
+                    type="text"
+                    value={auditQuery}
+                    onChange={(e) => setAuditQuery(e.target.value)}
+                    placeholder="Cari aktivitas / petugas..."
+                    className="w-full text-xs font-semibold bg-white border border-gray-200 rounded-lg pl-9 pr-3 py-1.5 focus:ring-1 focus:ring-blue-500 focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-1.5 rounded-lg border border-emerald-200 whitespace-nowrap hidden sm:block">
+                  Aktif
+                </span>
+              </div>
             </div>
 
-            {auditLogs.length === 0 ? (
+            {filteredAuditLogs.length === 0 ? (
               <div className="bg-white border border-gray-200 rounded-xl p-8 text-center text-gray-400 space-y-2">
                 <Info className="w-8 h-8 mx-auto text-gray-300" />
                 <p className="text-xs font-semibold">Belum ada entri log audit terekam di database.</p>
@@ -372,7 +400,7 @@ export default function SuperadminPanel({
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-150 font-mono text-[11px] text-gray-800">
-                    {auditLogs.map((log) => {
+                    {filteredAuditLogs.map((log) => {
                       const dateFormatted = new Date(log.timestamp).toLocaleString("id-ID", {
                         hour: "2-digit",
                         minute: "2-digit",

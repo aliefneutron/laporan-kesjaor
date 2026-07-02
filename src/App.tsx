@@ -485,6 +485,33 @@ export default function App() {
     });
   };
 
+  const handleRevertReport = (reportId: string, pkmName: string, reportTypeStr: string) => {
+    setConfirmModal({
+      isOpen: true,
+      title: "Batal Final Laporan",
+      message: `Apakah Anda yakin ingin membatalkan status final untuk laporan ${reportTypeStr.toUpperCase()} Puskesmas ${pkmName}? Laporan akan kembali menjadi Draf dan dapat diedit oleh operator.`,
+      confirmText: "Ya, Batal Final",
+      cancelText: "Tutup",
+      type: "warning",
+      onConfirm: async () => {
+        setSaving(true);
+        try {
+          await setDoc(doc(db, "reports", reportId), { submitted: false }, { merge: true });
+          
+          // Log audit
+          const logDetails = `Batal Final Laporan ${reportTypeStr.toUpperCase()} Puskesmas ${pkmName}, Periode: ${MONTH_NAMES[selectedMonth - 1]} ${selectedYear}`;
+          await writeAuditLog("Batal Final Laporan", logDetails);
+        } catch (err) {
+          handleFirestoreError(err, OperationType.UPDATE, `reports/${reportId}`);
+          setErrorMsg("Gagal membatalkan final laporan.");
+        } finally {
+          setSaving(false);
+          setConfirmModal(null);
+        }
+      }
+    });
+  };
+
   const handleDownloadExcel = (forceAggregate?: boolean) => {
     const isAggregate = forceAggregate !== undefined ? forceAggregate : (selectedPkmId === "aggregate");
     const values = isAggregate ? getAggregateValues() : (activeReport?.values || (reportType === "kerja" ? INITIAL_KERJA_VALUES : INITIAL_OLAHRAGA_VALUES));
@@ -1087,8 +1114,16 @@ export default function App() {
                           <h3 className="font-sans font-bold text-md text-white mt-1">
                             {selectedPkm.name} — {MONTH_NAMES[selectedMonth - 1]} {selectedYear}
                           </h3>
-                          <p className="text-[10px] text-blue-200 mt-1">
-                            Status laporan: <span className="font-semibold uppercase bg-white/10 px-1.5 py-0.5 rounded text-white">{activeReport?.submitted ? "Terkirim (Final)" : "Belum Terkirim / Draf"}</span>
+                          <p className="text-[10px] text-blue-200 mt-1 flex items-center gap-2">
+                            <span>Status laporan: <span className="font-semibold uppercase bg-white/10 px-1.5 py-0.5 rounded text-white">{activeReport?.submitted ? "Terkirim (Final)" : "Belum Terkirim / Draf"}</span></span>
+                            {activeReport?.submitted && (session.role === "admin" || session.role === "superadmin") && (
+                              <button
+                                onClick={() => handleRevertReport(activeReport.id, selectedPkm.name, reportType)}
+                                className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-2 py-0.5 rounded text-[10px] uppercase shadow-sm transition-colors cursor-pointer ml-2"
+                              >
+                                Batal Final
+                              </button>
+                            )}
                           </p>
                         </div>
                         <button
